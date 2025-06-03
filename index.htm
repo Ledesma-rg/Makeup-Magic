@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<link rel="stylesheet" type="text/css" href="pg.css">
+<body>
+
+  <header> 
+    <nav>
+      <ul class="nav-list">
+        <img src="logo.png" class="nav-img">
+        <li><a href="proyecto.html" class="nav-item">Inicio</a></li>
+        <li><a href="catalogo.html" class="nav-item">Catálogo</a></li>
+        <li><a href="contactanos.html" class="nav-item">Contáctanos</a></li>
+      </ul>
+    </nav>
+    <div class="btn-float">
+      <button onclick="abrirRegistro()">Registrarse</button>
+      <button onclick="abrirLogin()">Iniciar sesión</button>
+    </div>
+  </header>
+
+  <img src="logo.png" class="img" width="25%">
+  <h2 class="su">Resalta tu belleza con Makeup Magic.</h2>
+  <!-- Panel de Registro -->
+  <div id="panelRegistro" class="overlay-panel">
+    <div class="overlay-content">
+      <button onclick="cerrarRegistro()" class="close-btn">X</button>
+      <h2>Formulario de Registro</h2>
+      <form id="formRegistro">
+        <label>Nombre:</label>
+        <input type="text" id="nombre" required>
+        <label>Email:</label>
+        <input type="email" id="email" required>
+        <label>Contraseña:</label>
+        <input type="password" id="password" required>
+        <button type="submit">Registrarse</button>
+      </form>
+      <p id="mensajeRegistro"></p>
+    </div>
+  </div>
+
+  <!-- Panel de Login -->
+  <div id="panelLogin" class="overlay-panel">
+    <div class="overlay-content">
+      <button onclick="cerrarLogin()" class="close-btn">X</button>
+      <h2>Iniciar Sesión</h2>
+      <form id="formLogin">
+        <label>Email:</label>
+        <input type="email" id="loginEmail" required>
+        <label>Contraseña:</label>
+        <input type="password" id="loginPassword" required>
+        <button type="submit">Ingresar</button>
+      </form>
+      <p id="mensajeLogin"></p>
+    </div>
+  </div>
+
+  <!-- Saludo y Cerrar sesión -->
+  <div id="saludoContainer">
+    <p id="saludoUsuario"></p>
+    <button id="btnCerrarSesion" onclick="cerrarSesion()">Cerrar sesión</button>
+  </div>
+<br>
+  <center><h1 class="m">Más vendidos</h1></center>
+
+  <div class="conteiner-items">
+    <div class="item">
+      <figure><img src="producto5.jpg"></figure>
+      <div class="info-product">
+        <h2>Chancho</h2>
+        <h3>$250.00</h3>
+        <button onclick="location.href='producto5.html'">Ver más</button>
+      </div>
+    </div>
+    <div class="item">
+      <figure><img src="producto7.jpg"></figure>
+      <div class="info-product">
+        <h2>Ratón</h2>
+        <h3>$50.00</h3>
+        <button onclick="location.href='producto7.html'">Ver más</button>
+      </div>
+    </div>
+    <div class="item">
+      <figure><img src="producto8.jpg"></figure>
+      <div class="info-product">
+        <h2>Doraemon</h2>
+        <h3>$250.00</h3>
+        <button onclick="location.href='producto8.html'">Ver más</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // Función para mostrar el panel de registro
+  function abrirRegistro() {
+    document.getElementById('panelRegistro').style.display = 'flex';
+  }
+
+  // Función para ocultar el panel de registro
+  function cerrarRegistro() {
+    document.getElementById('panelRegistro').style.display = 'none';
+  }
+
+  // Función para mostrar el panel de login
+  function abrirLogin() {
+    document.getElementById('panelLogin').style.display = 'flex';
+  }
+
+  // Función para ocultar el panel de login
+  function cerrarLogin() {
+    document.getElementById('panelLogin').style.display = 'none';
+  }
+
+  // Captura el formulario de registro
+  const formRegistro = document.getElementById('formRegistro');
+
+  // Evento que se ejecuta al enviar el formulario de registro
+  formRegistro.onsubmit = function (e) {
+    e.preventDefault(); // Previene el envío normal del formulario
+
+    // Obtiene los valores del formulario
+    const nombre = document.getElementById('nombre').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    // Guarda los datos del usuario en localStorage en formato JSON
+    localStorage.setItem('usuario', JSON.stringify({ nombre, email, password }));
+
+    // Muestra mensaje de éxito y limpia el formulario
+    document.getElementById('mensajeRegistro').textContent = "Registro exitoso.";
+    formRegistro.reset();
+  };
+
+  // Captura el formulario de login
+  const formLogin = document.getElementById('formLogin');
+
+  // Evento que se ejecuta al enviar el formulario de login
+  formLogin.onsubmit = function (e) {
+    e.preventDefault(); // Previene el envío normal del formulario
+
+    // Obtiene los valores del login
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    // Obtiene el usuario guardado en localStorage
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+    // Verifica si el correo y contraseña coinciden
+    if (usuario && usuario.email === email && usuario.password === password) {
+      localStorage.setItem('logueado', 'true'); // Marca como logueado
+      cerrarLogin(); // Cierra el panel de login
+      document.getElementById('mensajeLogin').textContent = ''; // Limpia mensajes de error
+
+      // Muestra saludo con el nombre del usuario
+      document.getElementById('saludoUsuario').textContent = `Bienvenido, ${usuario.nombre}`;
+      document.getElementById('saludoContainer').style.display = 'flex';
+
+      // Oculta los botones flotantes de iniciar sesión/registrarse
+      document.querySelector('.btn-float').style.display = 'none';
+    } else {
+      // Muestra mensaje de error si los datos son incorrectos
+      document.getElementById('mensajeLogin').textContent = 'Correo o contraseña incorrectos.';
+    }
+  };
+
+  // Función para cerrar sesión
+  function cerrarSesion() {
+    localStorage.removeItem('logueado'); // Elimina el estado de logueado
+
+    // Oculta el saludo y vuelve a mostrar los botones de login/registro
+    document.getElementById('saludoUsuario').textContent = '';
+    document.getElementById('saludoContainer').style.display = 'none';
+    document.querySelector('.btn-float').style.display = 'flex';
+  }
+
+  // Al cargar la página, verifica si el usuario ya estaba logueado
+  window.onload = function () {
+    const logueado = localStorage.getItem('logueado') === 'true';
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+    // Si está logueado, muestra saludo y oculta los botones
+    if (logueado && usuario) {
+      document.getElementById('saludoUsuario').textContent = `Hola, ${usuario.nombre}`;
+      document.getElementById('saludoContainer').style.display = 'flex';
+      document.querySelector('.btn-float').style.display = 'none';
+    } else {
+      // Si no, oculta el saludo
+      document.getElementById('saludoContainer').style.display = 'none';
+    }
+  };
+</script>
+
+</body>
+</html>
